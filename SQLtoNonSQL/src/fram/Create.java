@@ -19,6 +19,7 @@ public class Create extends Requet{
     private ArrayList<String> ForeingKey = new ArrayList<String>();
     private ArrayList<String> ExternalKey = new ArrayList<String>();
     private int preority;
+    private String jsone;
     
     
     public String getTableName(){
@@ -39,7 +40,12 @@ public class Create extends Requet{
     public ArrayList<String> getExternalKey(){
         return ExternalKey;
     }
-    
+    public int getPreority(){
+        return preority;
+    }
+    public String getJsone(){
+        return jsone;
+    }
     
     public void setTableName(String name){
         TableName = name;
@@ -75,6 +81,13 @@ public class Create extends Requet{
     public void setPreority(int preo){
         preority=preo;
     }
+    public void setJsone(String jsn){
+        jsone=jsn;
+    }
+    
+    public void deleteforing(int k){
+        ForeingKey.remove(k);
+    }
     
     public Create(String requet,int preo){
         this.preority = preo;
@@ -83,6 +96,7 @@ public class Create extends Requet{
         setPrimaryKey(PrimaryKeyextractor(requet));
         ForeingKeyextractor(requet);
         attributExtractor(requet);
+        setPreority(2);
     }
     
     
