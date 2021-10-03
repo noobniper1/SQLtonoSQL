@@ -21,7 +21,7 @@ public class Create extends Requet{
     private int preority;
     private String jsone;
     
-    
+    // test
     public String getTableName(){
         return TableName;
     }
