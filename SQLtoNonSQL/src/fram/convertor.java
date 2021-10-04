@@ -37,7 +37,6 @@ public class convertor extends javax.swing.JFrame {
         JasonResulte = new javax.swing.JTextArea();
         jTextField1 = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -69,45 +68,39 @@ public class convertor extends javax.swing.JFrame {
 
         jLabel1.setText("table plus utilisé");
 
-        jButton2.setText("jButton2");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 395, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(38, 38, 38)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jButton1)
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(8, 8, 8)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 127, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
 
@@ -117,37 +110,46 @@ public class convertor extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        String[][] req = separate(SQLtext.getText());
-        Create tab;
-        Requet REQUETS = new Requet();
-        for (int i = 0;i < req.length;i++){
-            if(Requet.requetType(req[i][1])=="C"){
-                tab = new Create(req[i][1],i+1);
-                REQUETS.createTable.add(tab);
-            }    
+        char type = SQLtext.getText().toCharArray()[0];
+        Requet REQUETS = new Requet(type);
+        if(type=='I'){   
+            Insert ins=new Insert(SQLtext.getText()); 
+            JasonResulte.setText(ins.getJsoneCode());
         }
-        for(int i=0;i<REQUETS.createTable.size();i++){
-            if(REQUETS.createTable.get(i).getTableName().equals(jTextField1.getText())){
-                REQUETS.createTable.get(i).setPrinciple(true);
-                REQUETS.createTable.get(i).setPreority(0);
+        if(type=='C'){
+            String[][] req = separate(SQLtext.getText());
+            Create tab;
+            for (int i = 0;i < req.length;i++){
+                if(Requet.requetType(req[i][1])=="C"){
+                    tab = new Create(req[i][1],i+1);
+                    REQUETS.createTable.add(tab);
+                }    
             }
-        }
-        REQUETS.setPrincipleTable();
-        for(int i=0;i<REQUETS.createTable.size();i++){
-            if(REQUETS.createTable.get(i).getTableName().equals(jTextField1.getText())){
-                REQUETS.createTable.get(i).setPrinciple(true);
+            for(int i=0;i<REQUETS.createTable.size();i++){
+                if(REQUETS.createTable.get(i).getTableName().equals(jTextField1.getText())){
+                    REQUETS.createTable.get(i).setPrinciple(true);
+                    REQUETS.createTable.get(i).setPreority(0);
+                }
             }
+            REQUETS.setPrincipleTable();
+            String[] Ptables=jTextField1.getText().split("\\ ");
+            for(int i=0;i<REQUETS.createTable.size();i++){
+                for(int j=0;j<Ptables.length;j++){
+                    if(REQUETS.createTable.get(i).getTableName().equals(Ptables[j])){
+                        REQUETS.createTable.get(i).setPrinciple(true);
+                    }
+                }
+            }
+            REQUETS.setExternalKeys();
+            REQUETS.jsoncode();
+            String result=REQUETS.getJsoncode();
+            JasonResulte.setText(result);
+            System.out.println("8888888888888888888888888888888888");
+            for(int i =0;i<REQUETS.createTable.size();i++){
+                REQUETS.createTable.get(i).printor();
+            }
+            System.out.println("8888888888888888888888888888888888");
         }
-        REQUETS.setExternalKeys();
-        //REQUETS.mostUsedTable(jTextField1.getText());
-        REQUETS.jsoncode();
-        String result=REQUETS.getJsoncode();
-        JasonResulte.setText(result);
-        System.out.println("8888888888888888888888888888888888");
-        for(int i =0;i<REQUETS.createTable.size();i++){
-            REQUETS.createTable.get(i).printor();
-        }
-        System.out.println("8888888888888888888888888888888888");
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
@@ -157,10 +159,6 @@ public class convertor extends javax.swing.JFrame {
     private void jTextField1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextField1MouseClicked
         jTextField1.setText("");        // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1MouseClicked
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        Insert ins=new Insert(SQLtext.getText());
-    }//GEN-LAST:event_jButton2ActionPerformed
     public String removevoid(String req){
         String reqt[]=req.split("\\r?\\n");
         String reqs = null;
@@ -253,7 +251,6 @@ public class convertor extends javax.swing.JFrame {
     private javax.swing.JTextArea JasonResulte;
     private javax.swing.JTextArea SQLtext;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;

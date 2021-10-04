@@ -12,15 +12,28 @@ import java.util.ArrayList;
  * @author Info Pratique
  */
 public class Requet {
+    // att public bah my3ytlhomch b get set .. w c des tab dinamique bah mayaprisizich la taille wi3mar kima bgha .. li b khadra asamha
     public ArrayList<Create> createTable;
     public ArrayList<Create> principleTable;
     public ArrayList<Insert> insertTtable;
     
-    public Requet(){
-        this.createTable = new ArrayList<Create>();
-        this.principleTable = new ArrayList<Create>();
+    //créé un tab vide pr le remplire apré
+    public Requet(char type){
+        //ici rajouté ceux de eddy
+        switch(type){
+            case 'C':
+                this.createTable = new ArrayList<Create>();
+                this.principleTable = new ArrayList<Create>();
+                break;
+            case 'I':
+                this.insertTtable = new ArrayList<Insert>();
+            default:
+                System.out.println("la requet est pa valid ");
+        }
+        
     }
     
+    //pour trouvé les tab a affiché dans une relation
     public void setPrincipleTable(){
         for (int i = 0;i<createTable.size();i++){
             if(createTable.get(i).getPrimaryKey()==null){
@@ -36,38 +49,7 @@ public class Requet {
             }
         }
     }
-    public void mostUsedTable(String tablename){
-        Create table;
-        for (int k=0;k<createTable.size();k++){
-            if (createTable.get(k).getTableName().equals(tablename)){
-                table=createTable.get(k);
-                table.setPrinciple(true);
-                for(int i=0;i<createTable.size();i++){
-                    if(createTable.get(i).getForeingKey()!=null){
-                        for(int j=0;j<createTable.get(i).getForeingKey().size();j++){
-                            if(createTable.get(i).getForeingKey().get(j)!=null){
-                                String na=createTable.get(i).getForeingKey().get(j).split("\\ ")[1];
-                                if(na.equals(tablename)){
-                                    table.setExternalKey(createTable.get(i).getTableName());
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-    public boolean adder(Create cre){
-        int c = createTable.size();
-        createTable.add(cre);
-        String s= ""+createTable.size();
-        if(createTable.size()==c+1){
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
+    //thws 3la les tabli 3andhom clé étrangére t3k
     public void setExternalKeys(){
         String name;
         String key[];
@@ -85,15 +67,12 @@ public class Requet {
             }
         }
     }
-    
+    //pour etre sur que y a que les creete
     public static String requetType(String req){
         String[] reqt = req.split(" ");
         switch(reqt[0]){
             case "CREATE":{
                 return "C";
-            }
-            case "SELECT":{
-                return "S";
             }
             default:{
                 return null;
@@ -146,9 +125,6 @@ public class Requet {
                 createTable.get(i).setJsone(table);
                 table="";
             }
-        }
-        for(int i =0;i<createTable.size();i++){
-            table="";
             if(createTable.get(i).getPrincipal()){
                 table=table+"db.createCollection(\""+createTable.get(i).getTableName()+"\",{"+'\n'+"validator:{"+'\n'+"$jsonShema: {"+'\n'+"bsonType:\"object\","+'\n';
                 table=table+"properties: {"+'\n';
@@ -196,24 +172,24 @@ public class Requet {
                         }
                     }
                 }
-                table=table+'\n'+"}"+'\n'+"}"+'\n'+"}"+")"+'\n';
+                table=table+'\n'+"}"+'\n'+"}"+'\n'+"}"+'\n'+"}"+'\n'+"}"+")"+'\n';
                 createTable.get(i).setJsone(table);
             }
         }
     }
     public String getJsoncode(){
-        String code="";
-        boolean non=true;
-        for(int  i=0;i<createTable.size();i++){
-            if(createTable.get(i).getPrincipal()){
-                if(non){
-                    code=code+createTable.get(i).getJsone();
-                }
-                else{
-                    code=","+'\n'+code+createTable.get(i).getJsone();
+            String code="";
+            boolean non=true;
+            for(int  i=0;i<createTable.size();i++){
+                if(createTable.get(i).getPrincipal()){
+                    if(non){
+                        code=code+createTable.get(i).getJsone();
+                    }
+                    else{
+                        code=","+'\n'+code+createTable.get(i).getJsone();
+                    }
                 }
             }
-        }
         return code;
     }
 }

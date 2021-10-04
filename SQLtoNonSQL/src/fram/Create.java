@@ -11,7 +11,7 @@ import java.util.ArrayList;
  *
  * @author Info Pratique
  */
-public class Create extends Requet{
+public class Create {
     private String TableName;
     private String PrimaryKey;
     private ArrayList<String> Attribut = new ArrayList<String>();
@@ -20,8 +20,9 @@ public class Create extends Requet{
     private ArrayList<String> ExternalKey = new ArrayList<String>();
     private int preority;
     private String jsone;
+    private boolean isRelation;
     
-    // test
+    
     public String getTableName(){
         return TableName;
     }
@@ -45,6 +46,9 @@ public class Create extends Requet{
     }
     public String getJsone(){
         return jsone;
+    }
+    public boolean getRelation(){
+        return isRelation;
     }
     
     public void setTableName(String name){
@@ -84,22 +88,29 @@ public class Create extends Requet{
     public void setJsone(String jsn){
         jsone=jsn;
     }
-    
+    //ki tkoun la table machi principale ... nagal3olha les clé etrangére psk hia li rahi rayha t'
     public void deleteforing(int k){
         ForeingKey.remove(k);
     }
-    
-    public Create(String requet,int preo){
-        this.preority = preo;
-        requet = removetabs(requet);
-        setTableName(tableNameExtractor(requet));
-        setPrimaryKey(PrimaryKeyextractor(requet));
-        ForeingKeyextractor(requet);
-        attributExtractor(requet);
-        setPreority(2);
+    public void setRelation(){
+        if((getPrimaryKey()==null)&&(getForeingKey().size()==2)){
+            this.isRelation=true;
+        }
+        else{this.isRelation=false;}
     }
     
+    public Create(String req,int preo){
+        this.preority = preo;
+        req = removetabs(req);
+        setTableName(tableNameExtractor(req));
+        setPrimaryKey(PrimaryKeyextractor(req));
+        ForeingKeyextractor(req);
+        attributExtractor(req);
+        setPreority(2);
+        setRelation();
+    }
     
+    //divise la req pr retourné le nom du tab
     public static String tableNameExtractor(String req){
         String[] reqt = req.split("\\r?\\n");
         reqt = reqt[0].split("\\(");
